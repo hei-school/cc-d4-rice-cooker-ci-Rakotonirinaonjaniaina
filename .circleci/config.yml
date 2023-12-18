@@ -1,0 +1,64 @@
+name: Test Multi-language Project
+
+on:
+  push:
+    branches:
+      - main
+      - feature/go
+      - feature/ruby
+      - feature/C++
+      - feature/C
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test_cpp:
+    name: Test C++
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up C++ environment
+        run: sudo apt-get install g++
+      - name: Run C++ tests
+        run: |
+          g++ -o app app.cpp
+          ./app
+
+  test_c:
+    name: Test C
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up C environment
+        run: sudo apt-get install gcc
+      - name: Run C tests
+        run: |
+          gcc -o app app.c
+          ./app
+
+  test_go:
+    name: Test Go
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Go environment
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.17'
+      - name: Run Go tests
+        run: go test ./...
+
+  test_ruby:
+    name: Test Ruby
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Ruby environment
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.1'
+      - name: Run Ruby tests
+        run: |
+          bundle install
+          ruby app.rb
